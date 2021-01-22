@@ -1,0 +1,79 @@
+@bottom-bar-bg-color: #262626;
+@bottom-bar-line-color: #000;
+@template-bg-color: #001529;
+@template-bg-color-light: #ececec;
+@template-nav-bg-color: #001529;
+@template-text-color: #ccc;
+@template-text-title-color: #bcbcbc;
+@template-text-color-light: #fff;
+@template-footer-text-color: #999;
+
+@animate-duration: .45s;
+
+@font-family: '微软雅黑';
+body {
+  word-wrap: break-word;
+  min-width: 1200px;
+  overflow: auto;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.dif {
+  display: flex;
+}
+.a-i-c {
+  align-items: center;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.t-a-c {
+  text-align: center;
+}
+.j-c-c {
+  justify-content: center;
+}
+.a-s-c {
+  align-self: center;
+}
+
+/*总体布局*/
+
+.layout-content {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+}
+.layout-main {
+  flex: 1;
+}
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: opacity .3s ease;
+}
+.component-fade-enter, .component-fade-leave-to {
+  opacity: 0;
+}
