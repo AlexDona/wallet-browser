@@ -69,20 +69,13 @@
               <div class="card-list dif a-i-c">
                 <div class="card-list-l">发送人</div>
                 <div class="card-list-r">
-                  <span>{{tabData.fromAddress}}</span>&nbsp;<img v-clipboard="tabData.fromAddress" class="img" src="../../assets/icon/spread.png" />
-<!--                  <el-button type="primary">已确认</el-button>-->
-<!--                  <div>{{2323}} &nbsp;-->
-<!--                    <div name="listContent" >-->
-<!--                      <div>-&#45;&#45;&#45;&#45;消耗用户冻结/免费带宽：{{33}}带宽</div>-->
-<!--                      <div>-&#45;&#45;&#45;&#45;燃烧0.00AT获取带宽：{{11}}带宽</div>-->
-<!--                    </div>-->
-<!--                    <img  class="img" src="../../assets/icon/spread.png" /></div>-->
+                  <span>{{tabData.fromAddress || '--'}}</span>&nbsp;<img v-if="tabData.fromAddress" v-clipboard="tabData.fromAddress" class="img" src="../../assets/icon/spread.png" />
                   </div>
               </div>
               <div class="card-list dif a-i-c">
                 <div class="card-list-l">接收人</div>
                 <div class="card-list-r">
-                  <span>{{tabData.toAddress}}</span>&nbsp;<img  v-clipboard="tabData.toAddress" class="img" src="../../assets/icon/spread.png" />
+                  <span>{{tabData.toAddress || '--'}}</span>&nbsp;<img v-if="tabData.fromAddress" v-clipboard="tabData.toAddress" class="img" src="../../assets/icon/spread.png" />
                 </div>
               </div>
               <div class="card-list dif a-i-c">
@@ -100,7 +93,7 @@
               <div class="card-list dif a-i-c">
                 <div class="card-list-l">通证</div>
                 <div class="card-list-r">
-                  <span>{{tabData.assetName}}</span>
+                  <span>{{tabData.assetName || '--'}}</span>
                 </div>
               </div>
               <div class="card-list dif a-i-c">
@@ -175,7 +168,25 @@ export default {
   },
   methods: {
     handleQuery () {
-      this.getBlockNow()
+      if (this.searchText.length === 64) {
+        this.getBlockNow()
+      } else if (!isNaN(this.searchText)) {
+        this.$router.push({ // 区块详情
+          path: '/blockDetail',
+          query: {
+            key: this.searchText
+          }
+        })
+      } else if (this.searchText.length === 34) {
+        this.$router.push({
+          path: '/accountDetail',
+          query: {
+            key: this.searchText
+          }
+        })
+      } else {
+        this.$message.error('格式错误')
+      }
     },
     async getBlockNow () {
       await fetch(`/wallet/getnowblock`).then(res => {
