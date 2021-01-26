@@ -67,6 +67,9 @@ export default {
   top: 0;
   width: 100%;
   z-index: 99;
+  /deep/.el-menu {
+    background: none !important;
+  }
   .el-menu-header {
     background: transparent;
     margin-left: 130px;

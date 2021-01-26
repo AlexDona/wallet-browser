@@ -4,13 +4,14 @@ import Home from '@/view/Home'
 import Block from '@/view/Block'
 import Transaction from '@/view/Transaction'
 // import Accounts from '@/view/Accounts'
-import store from '@/store'
-import {Message} from 'element-ui'
+// import store from '@/store'
+// import {Message} from 'element-ui'
 
 const HomeContent = () => import('@/view/HomeContent')
 const BlockDetail = () => import('@/view/Block/blockDetail')
 const TransactionDetail = () => import('@/view/Transaction/transactionDetail')
 const AccountDetail = () => import('@/view/Accounts/accountDetail')
+const error = () => import('@/view/common/404.vue')
 // const features = () => import('@/view/features')
 // const Wallet = () => import('@/view/wallet/index')
 // const Account = () => import('@/view/account')
@@ -63,6 +64,10 @@ const router = new Router({
           name: '交易详情',
           type: 'child', // 是否属于子路由
           component: TransactionDetail
+        },
+        {
+          path: '*',
+          component: error
         }
       ]
       // children: [
@@ -131,27 +136,28 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (!store.state.eosConfig && to.matched.some(record => record.meta.needConnectNet)) {
-    Message.warning('此选项需要先进行网络设置！')
-    next({
-      path: '/setting',
-      query: { redirect: to.fullPath }
-    })
-  } else {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-      if (!store.state.isOnline) {
-        Message.warning('此选项需要先导入密匙！')
-        next({
-          path: '/importkeys',
-          query: { redirect: to.fullPath }
-        })
-      } else {
-        next()
-      }
-    } else {
-      next()
-    }
-  }
+  next()
+  // if (!store.state.eosConfig && to.matched.some(record => record.meta.needConnectNet)) {
+  //   Message.warning('此选项需要先进行网络设置！')
+  //   next({
+  //     path: '/setting',
+  //     query: { redirect: to.fullPath }
+  //   })
+  // } else {
+  //   if (to.matched.some(record => record.meta.requiresAuth)) {
+  //     if (!store.state.isOnline) {
+  //       Message.warning('此选项需要先导入密匙！')
+  //       next({
+  //         path: '/importkeys',
+  //         query: { redirect: to.fullPath }
+  //       })
+  //     } else {
+  //       next()
+  //     }
+  //   } else {
+  //     next()
+  //   }
+  // }
 })
 
 router.afterEach((to, from) => {

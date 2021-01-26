@@ -1,15 +1,19 @@
 <template>
   <div class="page-error">
-<img src="@/assets/404.jpg" alt="">
+<img src="@/assets/404.png" alt="">
   </div>
 </template>
 
 <script>
-  export default {
+export default {
 
-  }
+}
 </script>
 
 <style scoped>
-.page-error img{width: 100%;}
+.page-error img {
+  width: 100%;
+  height: max-content;
+  object-fit: contain;
+}
 </style>
