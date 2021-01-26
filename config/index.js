@@ -79,7 +79,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../docs'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/eos-wallet/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

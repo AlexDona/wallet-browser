@@ -17,6 +17,7 @@
         :page-size="100"
         :total="tableData.total"
         :layout="'prev, pager, next, sizes, jumper'"
+        @handleSize="handleSize"
         @handleCurrent="handleCurrent"
       ></table-component>
     </el-col>
@@ -37,13 +38,11 @@ export default {
       columns: [
         {
           column: '高度',
-          prop: 'blockNumber',
-          width: 80
+          prop: 'blockNumber'
         },
         {
           column: '块龄',
-          prop: 'blockAge',
-          width: 180
+          prop: 'blockAge'
         },
         {
           column: '状态',
@@ -52,14 +51,12 @@ export default {
         },
         {
           column: '交易',
-          prop: 'transactionId',
-          width: 180
+          prop: 'transactionId'
         },
         {
           column: '出块者',
-          prop: 'witness_address',
-          width: 180
-        },
+          prop: 'witness_address'
+        }
         // {
         //   column: '字节',
         //   prop: 'bytes',
@@ -108,63 +105,54 @@ export default {
           pageSize: this.tableData.pageSize
         })
       }).then(res => {
-        res.json().then(data => {
+        res.json().then(async data => {
+          this.tableData.result = []
           if (data.status && data.status === 1) {
-            // console.log(data.result, 'getTransactions')
-            this.resData = data.result
+            this.tableData.total = data.result.totalNum
             let newItem = []
-            newItem = data.result.items && data.result.items.map((item, index) => {
-              const blockAge = this.blockNum - item.blockNumber
-              item.blockAge = getDuration(blockAge)
-              item.assetAmount = item.assetAmount / 1e6
-              item.status = this.blockNum - item.blockNumber >= 19 ? 1 : 0
-              item.witness_address = this.getblockbynum(item.blockNumber)
-              this.getblockbynum(item.blockNumber, index)
-              return item
+            data.result.items && data.result.items.forEach((item, index) => {
+              this.getblockbynum(item.blockNumber, item, newItem)
+              // const data = this.getblockbynum(item.blockNumber, item, newItem)
+              // const blockAge = this.blockNum - item.blockNumber
+              // item.blockAge = getDuration(blockAge)
+              // item.assetAmount = item.assetAmount / 1e6
+              // item.status = this.blockNum - item.blockNumber >= 19 ? 1 : 0
+              // item.witness_address = data
+              // return item
             })
-            data.result.items = newItem
-            let newResult = {
-              result: newItem
-            }
-            Object.assign(newResult, this.tableData.result)
-            this.tableData.result = newItem
-            console.log(Object.assign(newResult, this.tableData.result), 'block')
-            // this.$store.dispatch('setResultData', data.result)
+            // data.result.items = newItem
+            // let newResult = {
+            //   result: newItem
+            // }
+            // Object.assign(newResult, this.tableData.result)
+            // this.tableData.result = newItem
           }
         })
+      }).catch(err => {
+        this.$message.error(err)
       })
     },
-    async getblockbynum (num, index) {
-      await fetch(`/wallet/getblockbynum?num=${num}`).then(res => {
-        res.json().then(data => {
-          this.tableData.result.push({
-            witness_address: data.block_header.raw_data.witness_address
-          })
-          // this.tableData.result[index].witness_address = data.block_header.raw_data.witness_address
-          console.info(data.block_header.raw_data.witness_address, this.tableData.result, 'outerBlock')
-          // console.log(data, 'blocks')
-          // const tabData = {
-          //   title: '交易',
-          //   status: this.blockNum - data.bloc_header && data.bloc_header.raw_data.number >= 19 ? 1 : 0,
-          //   number: data.block_header && data.block_header.raw_data.number,
-          //   blockID: data.blockID,
-          //   timeStamp: data.block_header && data.block_header.raw_data.timestamp,
-          //   parentHash: data.block_header && data.block_header.raw_data.parentHash,
-          //   transactions: data.transactions.length,
-          //   witness_address: data.block_header && data.block_header.raw_data.witness_address
-          // }
-          // this.tabData = tabData
-          let tableData = {
-            total: 10,
-            result: []
-          }
-          this.tableData = tableData
-          return data.block_header.raw_data.witness_address
-        })
-      })
+    async getblockbynum (num, item, newItem) {
+      const data = await fetch(`/wallet/getblockbynum?num=${num}`).then(res => res.json())
+      const blockAge = this.blockNum - item.blockNumber
+      item.blockAge = getDuration(blockAge)
+      item.assetAmount = item.assetAmount / 1e6
+      item.status = this.blockNum - item.blockNumber >= 19 ? 1 : 0
+      item.witness_address = data.block_header.raw_data && data.block_header.raw_data.witness_address
+      newItem.push(item)
+      let newResult = {
+        result: newItem
+      }
+      Object.assign(newResult, this.tableData.result)
+      this.tableData.result = newItem
     },
     handleCurrent (num) {
-      console.log(num, 'current')
+      this.tableData.currentPage = num
+      this.getTransactions(this.searchText)
+    },
+    handleSize (size) {
+      this.tableData.pageSize = size
+      this.getTransactions(this.searchText)
     }
   }
 }

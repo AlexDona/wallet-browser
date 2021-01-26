@@ -15,7 +15,7 @@
         ></table-component>
       </el-col>
     </el-row>
-    <el-row type="flex" justify="center" class="block">
+    <!--<el-row type="flex" justify="center" class="block">
       <el-col :xs="24" :sm="18" :lg="14" class="block-container">
         <div class="t-a-c title">区块 & 账户</div>
         <el-row type="flex" justify="space-around">
@@ -50,7 +50,7 @@
           </el-col>
         </el-row>
       </el-col>
-    </el-row>
+    </el-row>-->
   </div>
 </template>
 
@@ -78,21 +78,19 @@ export default {
         },
         {
           column: '块龄',
-          prop: 'blockAge',
-          width: 80
+          prop: 'blockAge'
         },
         {
           column: '发送人',
-          prop: 'fromAddress',
+          prop: 'fromAddress'
         },
         {
           column: '接受人',
-          prop: 'toAddress',
+          prop: 'toAddress'
         },
         {
           column: '交易类型',
-          prop: 'contractType',
-          width: 80
+          prop: 'contractType'
         },
         {
           column: '数额',

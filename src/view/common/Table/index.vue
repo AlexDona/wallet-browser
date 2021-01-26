@@ -103,7 +103,7 @@ export default {
       // console.log(this.columnIndex, 'columnIndex')
       // console.log(row, column, rowIndex, columnIndex, 'sss')
       Object.entries(row).map(item => {
-        if (item[1] && item[1].toString().length >= 17 && !item[0].includes('Backup')) {
+        if (item[1] && item[1].toString().length >= 17 && !item[0].includes('Backup') && (item[0] === 'transactionId' || item[0] === 'toAddress' || item[0] === 'fromAddress')) {
           let str = item[1].toString()
           row[item[0]] = str.substr(0, 5) + '***' + str.substr(-5)
           row[item[0] + 'Backup'] = item[1]

@@ -118,23 +118,20 @@ export default {
       columns: [
         {
           column: '哈希值',
-          prop: 'transactionId',
-          width: 280
+          prop: 'transactionId'
         },
         {
           column: '状态',
           prop: 'status',
-          width: 160
+          width: 80
         },
         {
           column: '块龄',
-          prop: 'blockAge',
-          width: 260
+          prop: 'blockAge'
         },
         {
           column: '合约类型',
-          prop: 'contractType',
-          width: 193
+          prop: 'contractType'
         }
       ],
       tableData: {
@@ -154,7 +151,25 @@ export default {
       console.log(size, 'size')
     },
     handleQuery () {
-      this.getBlockNow()
+      if (this.searchText.length === 64) {
+        this.$router.push({
+          path: '/transactionDetail',
+          query: {
+            key: this.searchText
+          }
+        })
+      } else if (!isNaN(this.searchText)) {
+        this.getBlockNow()
+      } else if (this.searchText.length === 34) {
+        this.$router.push({
+          path: '/accountDetail',
+          query: {
+            key: this.searchText
+          }
+        })
+      } else {
+        this.$message.error('格式错误')
+      }
     },
     async getBlockNow (pageSize = 10) {
       await fetch(`/wallet/getnowblock`).then(res => {
@@ -199,7 +214,8 @@ export default {
       })
     },
     handleCurrent (num) {
-      console.log(num, 'current')
+      this.tableData.currentPage = num
+      this.getBlockNow()
     },
     handleCell (row, column, cell, event) {
       if (column.property === 'transactionId' && row[column.property]) {

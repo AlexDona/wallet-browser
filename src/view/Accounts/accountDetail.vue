@@ -139,8 +139,7 @@ export default {
         },
         {
           column: '交易类型',
-          prop: 'contractType',
-          width: 80
+          prop: 'contractType'
         },
         {
           column: '状态',
@@ -181,7 +180,25 @@ export default {
       this.handleQuery()
     },
     handleQuery () {
-      this.getBlockNow()
+      if (this.searchText.length === 64) {
+        this.$router.push({ // 区块详情
+          path: '/transactionDetail',
+          query: {
+            key: this.searchText
+          }
+        })
+      } else if (!isNaN(this.searchText)) {
+        this.$router.push({ // 区块详情
+          path: '/blockDetail',
+          query: {
+            key: this.searchText
+          }
+        })
+      } else if (this.searchText.length === 34) {
+        this.getBlockNow()
+      } else {
+        this.$message.error('格式错误')
+      }
     },
     async getBlockNow () {
       await fetch(`/wallet/getnowblock`).then(res => {

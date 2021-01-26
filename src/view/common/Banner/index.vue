@@ -60,6 +60,7 @@ export default {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          address: transactionId,
           nextPage: page,
           pageSize: pagesize
         })
@@ -104,11 +105,26 @@ export default {
       // })
     },
     handleQuery () {
-      this.getBlockNow()
-
       if (this.searchText.length === 34) {
         console.info(this.searchText, 'searchText')
+        this.getBlockNow()
         this.$emit('getSearchCom')
+      } else if (this.searchText.length === 64) {
+        this.$router.push({
+          path: '/transactionDetail',
+          query: {
+            key: this.searchText
+          }
+        })
+      } else if (!isNaN(this.searchText)) {
+        this.$router.push({ // 区块详情
+          path: '/blockDetail',
+          query: {
+            key: this.searchText
+          }
+        })
+      } else {
+        this.$message.error('格式错误')
       }
     },
     handleSelect (item) {
